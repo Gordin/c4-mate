@@ -18,17 +18,17 @@ def parse_mate(html):
     return re.match('.*' + user + ': (.*?)&', html, flags=re.DOTALL).group(1)
 
 for amount in args.amount:
-    if amount > 0:
-        url = lichturl + "/add/?amount={}".format(amount)
-        f = urllib.request.urlopen(url)
-        response = f.read().decode()
-        print("Added {}€".format(amount))
-    else:
-        amount = str(abs(amount)).replace(",", ".")
-        url = lichturl + "/distract/?amount={}".format(amount)
-        f = urllib.request.urlopen(url)
-        response = f.read().decode()
-        print("Subtracted {}€".format(amount))
+    amount = float(amount.replace(",", "."))
 
+    if amount > 0:
+        action_strings = {'url': 'add', 'text': 'Added'}
+    else:
+        action_strings = {'url': 'distract', 'text': 'Subtracted'}
+
+    url = lichturl + "/" + action_strings['url'] + "/?amount={}".format(amount)
+    f = urllib.request.urlopen(url)
+    print(action_strings['text'] + " {}€".format(amount))
+
+    response = f.read().decode()
     new_amount = parse_mate(response)
     print("New Amount is {}€".format(new_amount))
