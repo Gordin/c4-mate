@@ -18,12 +18,12 @@ def parse_mate(html):
     return re.match('.*' + user + ': (.*?)&', html, flags=re.DOTALL).group(1)
 
 for amount in args.amount:
-    amount = float(amount.replace(",", "."))
 
     if amount > 0:
         action_strings = {'url': 'add', 'text': 'Added'}
     else:
         action_strings = {'url': 'distract', 'text': 'Subtracted'}
+        amount = abs(amount)
 
     url = lichturl + "/" + action_strings['url'] + "/?amount={}".format(amount)
     f = urllib.request.urlopen(url)
