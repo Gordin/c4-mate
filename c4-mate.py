@@ -2,6 +2,7 @@
 
 import argparse
 import urllib.request
+from urllib.parse import quote
 import re
 
 parser = argparse.ArgumentParser(description=
@@ -10,7 +11,7 @@ parser.add_argument('amount', type=float, nargs='+',
                     help='Amount to add or subtract')
 
 user = ""
-lichturl = "http://licht:8000/mate/" + user
+lichturl = "http://licht:8000/mate/" + quote(user)
 args = parser.parse_args()
 
 
