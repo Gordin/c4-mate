@@ -47,7 +47,7 @@ def perform_request(amount, user=me):
 
 def check(user=me):
     response = perform_request(0, user)
-    new_amount = parse_mate(response)
+    new_amount = parse_mate(response, user)
     print("{} has {}€".format(user, new_amount))
     return float(new_amount)
 
@@ -63,7 +63,7 @@ def transfer(user, to, amount):
 
 
 if not len(args.amount):
-    check()
+    check(args.user)
 
 if args.to:
     for amount in args.amount:
