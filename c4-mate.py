@@ -46,7 +46,7 @@ def perform_request(amount, user=me):
 
 
 def check(user=me):
-    response = perform_request(0)
+    response = perform_request(0, user)
     new_amount = parse_mate(response)
     print("{} has {}€".format(user, new_amount))
     return float(new_amount)
