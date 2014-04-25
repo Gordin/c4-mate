@@ -27,13 +27,14 @@ def perform_request(amount, user=me):
     if amount > 0:
         action = 'add'
     else:
-        action = 'distract'
+        action = 'subtract'
         amount = abs(amount)
 
-    lichturl = "http://licht:8000/mate/" + quote(user)
-    url = lichturl + "/" + action + "/?amount={}".format(amount)
+    lichturl = "http://autoc4/mate/user/" + quote(user)
+    url = lichturl + "/" + action + "/{}".format(amount)
 
     f = urllib.request.urlopen(url)
+    
     if amount == 0:
         log_string = "Checking available money of {}".format(user)
     elif action == 'add':
@@ -49,7 +50,7 @@ def check(user=me):
     response = perform_request(0, user)
     new_amount = parse_mate(response, user)
     print("{} has {}€".format(user, new_amount))
-    return float(new_amount)
+    return float(new_amount.replace(',','.'))
 
 
 def transfer(user, to, amount):
