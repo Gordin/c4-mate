@@ -71,7 +71,7 @@ if args.to:
 else:
     for amount in args.amount:
         if amount > 0 or check() + amount >= 0:
-            response = perform_request(amount)
+            response = perform_request(amount, args.user)
             new_amount = parse_mate(response)
             print("New Amount is {}€".format(new_amount))
         else:
