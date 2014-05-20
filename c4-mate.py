@@ -34,7 +34,7 @@ def perform_request(amount, user=me):
     url = lichturl + "/" + action + "/{}".format(amount)
 
     f = urllib.request.urlopen(url)
-    
+
     if amount == 0:
         log_string = "Checking available money of {}".format(user)
     elif action == 'add':
@@ -55,7 +55,7 @@ def check(user=me):
 
 def transfer(user, to, amount):
     if amount <= 0:
-        print("Transfer more that 0€ plz")
+        print("Transfer more than 0€ plz")
     elif check(user) < amount:
         print("{} doesn't have enough money to do this!".format(user))
     else:
