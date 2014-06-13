@@ -7,8 +7,8 @@ import re
 
 me = ""
 
-parser = argparse.ArgumentParser(description=
-                                 'Add or subtract money from scratchcard.')
+parser = argparse.ArgumentParser(
+    description='Add or subtract money from scratchcard.')
 parser.add_argument('amount', type=float, nargs='*',
                     help='Amount to add or subtract')
 parser.add_argument('-u', '--user', default=me,
@@ -46,11 +46,23 @@ def perform_request(amount, user=me):
     return f.read().decode()
 
 
+def give(user, to, amount):
+    url = "http://autoc4/mate/user/{}/give/{}/to/{}".format(quote(user),
+                                                            amount, quote(to))
+
+    log_string = "Giving {}€ from {} to {}.".format(amount, user, to)
+    print(log_string)
+
+    f = urllib.request.urlopen(url)
+
+    return f.read().decode()
+
+
 def check(user=me):
     response = perform_request(0, user)
     new_amount = parse_mate(response, user)
     print("{} has {}€".format(user, new_amount))
-    return float(new_amount.replace(',','.'))
+    return float(new_amount.replace(',', '.'))
 
 
 def transfer(user, to, amount):
@@ -59,21 +71,31 @@ def transfer(user, to, amount):
     elif check(user) < amount:
         print("{} doesn't have enough money to do this!".format(user))
     else:
-        perform_request(amount, to)
-        perform_request(-amount, user)
+        return give(user, to, amount)
 
 
-if not len(args.amount):
-    check(args.user)
-
-if args.to:
-    for amount in args.amount:
-        transfer(args.user, args.to, amount)
-else:
-    for amount in args.amount:
-        if amount > 0 or check() + amount >= 0:
+def do_transaction(user, to, amount):
+    if amount > 0 or check(user) + amount >= 0:
+        if to:
+            response = transfer(user, to, amount)
+            check(user)
+        else:
             response = perform_request(amount, args.user)
             new_amount = parse_mate(response)
             print("New Amount is {}€".format(new_amount))
-        else:
-            print("You don't have enough money to do this!")
+    else:
+        print("You don't have enough money to do this!")
+
+
+def main():
+    if not len(args.amount):
+        return check(args.user)
+
+    if not args.user:
+        args.user = me
+
+    for amount in args.amount:
+        do_transaction(args.user, args.to, amount)
+
+if __name__ == '__main__':
+    main()
