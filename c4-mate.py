@@ -33,7 +33,11 @@ def perform_request(amount, user=me):
     lichturl = "http://autoc4/mate/user/" + quote(user)
     url = lichturl + "/" + action + "/{}".format(amount)
 
-    f = urllib.request.urlopen(url)
+    try:
+        f = urllib.request.urlopen(url)
+    except:
+        print("Beim Aufruf ist ein Fehler aufgetreten.\nDer Zugriff wird beendet.\nMögliche Fehler: server nicht erreichbar, Nutzername existiert nicht in der gegebenen Schreibweise")
+        raise SystemExit
 
     if amount == 0:
         log_string = "Checking available money of {}".format(user)
